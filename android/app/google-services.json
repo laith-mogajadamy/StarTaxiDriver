@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "155517660580",
+    "project_id": "star-taxi-bfd86",
+    "storage_bucket": "star-taxi-bfd86.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155517660580:android:550ac4a35a32762e5f2531",
+        "android_client_info": {
+          "package_name": "com.example.driver_taxi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-b1I3jD-FJtfaK5PvBPLSNAOVvj-mV7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155517660580:android:0a921228023411f75f2531",
+        "android_client_info": {
+          "package_name": "com.example.tawsella_final"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-b1I3jD-FJtfaK5PvBPLSNAOVvj-mV7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
