@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui' as ui;
-import 'package:driver_taxi/components/custom_botton.dart';
 import 'package:driver_taxi/components/custom_loading_button.dart';
 import 'package:driver_taxi/location/location.dart';
 import 'package:driver_taxi/utils/app_colors.dart';
@@ -23,10 +22,16 @@ class _OrderState extends State<Order> {
   bool _isOnDuty = true;
   double _price = 0.0;
   final TextEditingController _kilometersController = TextEditingController();
+  final TextEditingController _reasonController = TextEditingController();
+  final TextEditingController _additionalController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
 
   @override
   void dispose() {
     _kilometersController.dispose();
+    _reasonController.dispose();
+    _additionalController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
@@ -134,16 +139,16 @@ class _OrderState extends State<Order> {
             ),
             SizedBox(height: 8.h),
             // عرض السعر
-            CustomButton(
-              width: 295.h,
-              height: 35.h,
-              onPressed: () {},
-              background_color1: AppColors.white,
-              background_color2: AppColors.white,
-              border_color: AppColors.grey,
-              text: 'السعر: $_price',
-              textColor: AppColors.BackgroundColor,
-            ),
+            // CustomButton(
+            //   width: 295.h,
+            //   height: 35.h,
+            //   onPressed: () {},
+            //   background_color1: AppColors.white,
+            //   background_color2: AppColors.white,
+            //   border_color: AppColors.grey,
+            //   text: 'السعر: $_price',
+            //   textColor: AppColors.BackgroundColor,
+            // ),
             const SizedBox(height: 20),
             // حقل إدخال الكيلومترات
             TextField(
@@ -165,14 +170,66 @@ class _OrderState extends State<Order> {
                   const TextInputType.numberWithOptions(decimal: true),
               onChanged: _updatePrice,
             ),
+            const SizedBox(height: 10),
+            // حقل إدخال المعلومات الإضافية
+            TextField(
+              controller: _additionalController,
+              decoration: InputDecoration(
+                hintText: 'المبلغ المالي',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // حقل إدخال السبب
+            TextField(
+              controller: _reasonController,
+              decoration: InputDecoration(
+                hintText: 'السبب',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
+            ),
+
+            const SizedBox(height: 10),
+            // حقل إدخال الملاحظات
+            TextField(
+              controller: _notesController,
+              decoration: InputDecoration(
+                hintText: 'ملاحظات',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
+            ),
             const Spacer(),
             // زر إنهاء الرحلة
             LoadingButtonWidget(
               onPressed: () {
                 double kilometers =
                     double.tryParse(_kilometersController.text) ?? 1.0;
-                LocationService.EndsendLocationToDataBase(kilometers);
+                String reason = _reasonController.text.trim();
+                String additional = _additionalController.text.trim();
+                String notes = _notesController.text.trim();
+
+                LocationService.EndsendLocationToDataBase(
+                    kilometers, reason, additional, notes);
+
                 _kilometersController.clear();
+                _reasonController.clear();
+                _additionalController.clear();
+                _notesController.clear();
               },
               text: 'قم بانهاء الرحلة',
             ),

@@ -547,8 +547,7 @@ class _NotificationsState extends State<Notifications> {
           await prefs.setString('request_id', data['request_id']);
           await prefs.setString('chat_id', data['chat_id']);
           await prefs.setString('customer_id', data['customer_id']);
-          await prefs.setDouble(
-              'price', data['price']?.toDouble() ?? 0.0); 
+          await prefs.setDouble('price', data['price']?.toDouble() ?? 0.0);
           await prefs.setString('typeMov', data['type']);
           await prefs.setString('is_onKM', data['is_onKM'].toString());
 

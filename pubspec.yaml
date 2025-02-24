@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   get: ^4.6.1
   # DateTime
   # jiffy: ^6.2.1
