@@ -27,93 +27,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  // final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isOnDuty = true;
-  // late Timer _reconnectTimer;
-  // bool _isConnected = false;
-  // final Completer<GoogleMapController> _controller =
-  //     Completer<GoogleMapController>();
-  // GoogleMapController? gms;
-  // List<Marker> markers = [];
-  // CameraPosition cameraPosition = const CameraPosition(
-  //   target: LatLng(33.504307, 36.304141),
-  //   zoom: 10.4746,
-  // );
-
-  // late WebSocketChannel _channel;
-  // bool _isSnackbarVisible = false;
-  // String? id;
-  // String? _token;
-  // String? _customer_id;
-  // String? _chat_id;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadUserData();
-  //   getCurrentLocation();
-  // }
-
-  // Future<void> loadUserData() async {
-  //   Map<String, String?> userInfo = await UserPreferences.getUserInfo();
-  //   setState(() {
-  //     id = userInfo['id'];
-  //     _token = userInfo['token'];
-  //     // _chat_id = userInfo['chat_id'];
-  //     // _customer_id = userInfo['customer_id'];
-  //     if (id != null && _token != null) {
-  //       // _connectToWebSocket(); الجديد
-  //       // _connectToWebSocket2();
-  //     } else {
-  //       log('Failed to load user data: id or token is null');
-  //     }
-  //   });
-  // }
-  // Future<void> getCurrentLocation() async {
-  //   bool serviceEnabled;
-  //   LocationPermission permission;
-
-  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     log('Location services are disabled.');
-  //     return;
-  //   }
-
-  //   permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       return Future.error('Location permissions are denied');
-  //     }
-  //   }
-
-  //   if (permission == LocationPermission.whileInUse ||
-  //       permission == LocationPermission.always) {
-  //     Position position = await Geolocator.getCurrentPosition();
-
-  //     markers.add(Marker(
-  //       markerId: const MarkerId("current_location"),
-  //       position: LatLng(position.latitude, position.longitude),
-  //       infoWindow: const InfoWindow(title: 'موقعك الحالي'),
-  //     ));
-
-  //     gms?.animateCamera(CameraUpdate.newLatLng(
-  //         LatLng(position.latitude, position.longitude)));
-
-  //     setState(() {});
-  //   }
-  // }
-
-  // void sendLocation() async {
-  //   await LocationService.sendLocationToDatabase();
-  //   log('تم إرسال الموقع.');
-  // }
 
   Future<void> sendStatusToDataBase(int stateParam) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     String apiUrl = '${Url.url}api/drivers/change-state';
-    // int stateParam = isOnDuty ? 1 : 0;
 
     final Map<String, dynamic> data = {
       'state': stateParam,
@@ -138,13 +57,6 @@ class _MainScreenState extends State<MainScreen> {
       log('حدث خطأ أثناء إرسال البيانات: $e');
     }
   }
-
-  // @override
-  // void dispose() {
-  //   _channel.sink.close();
-  //   // _channel2.sink.close();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -211,8 +123,6 @@ class _MainScreenState extends State<MainScreen> {
                   textColor:
                       _isOnDuty ? AppColors.white : AppColors.BackgroundColor,
                   fontSize: 18,
-                  // lodingColor:
-                  //     _isOnDuty ? AppColors.white : AppColors.BackgroundColor,
                   text: _isOnDuty ? 'مستعد للرحلات' : 'انت في استراحة',
                 ),
               ],

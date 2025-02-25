@@ -1,37 +1,40 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:driver_taxi/utils/url.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:driver_taxi/view/screen/mainscreen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationService {
   static Timer? _locationTimer;
 
+  /// بدء إرسال الموقع بشكل دوري كل 5 ثوانٍ
   static void startSendingLocationPeriodically() {
     _locationTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       sendLocationToDatabase();
     });
   }
 
+  /// إيقاف إرسال الموقع
   static void stopSendingLocation() {
     _locationTimer?.cancel();
     _locationTimer = null;
   }
 
+  /// إرسال الموقع الحالي إلى قاعدة البيانات
   static Future<void> sendLocationToDatabase() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString('Id');
-    var token = prefs.getString('token');
-    String apiUrl = '${Url.url}api/get-taxi-location/$userId';
-
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('Id');
+      var token = prefs.getString('token');
+      String apiUrl = '${Url.url}api/get-taxi-location/$userId';
+
+      // طلب إذن الوصول إلى الموقع
       PermissionStatus status = await Permission.location.request();
       if (status == PermissionStatus.denied) {
         log('إذن الوصول إلى الموقع مرفوض من قبل المستخدم.');
@@ -53,26 +56,22 @@ class LocationService {
 
       final response = await http.post(
         Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _buildHeaders(token),
         body: jsonEncode(payload),
       );
 
       if (response.statusCode == 200) {
         log('تم إرسال بيانات الموقع بنجاح.');
       } else {
-        print(response.body);
         log('فشل في إرسال بيانات الموقع. الرمز الحالة: ${response.statusCode}');
+        log('تفاصيل الخطأ: ${response.body}');
       }
     } catch (e) {
       log('حدث خطأ أثناء إرسال بيانات الموقع: $e');
     }
   }
 
-  // دالة لإنهاء إرسال الموقع وإرسال البيانات النهائية
+  /// إنهاء إرسال الموقع وإرسال البيانات النهائية إلى قاعدة البيانات
   static Future<void> EndsendLocationToDataBase(
     double kilometers,
     double additional,
@@ -80,20 +79,20 @@ class LocationService {
     String notes,
     String reason,
   ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var request_id = prefs.getString('request_id');
-    var token = prefs.getString('token');
-    String apiUrl = '${Url.url}api/movements/mark-completed/$request_id';
-
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var requestId = prefs.getString('request_id');
+      var token = prefs.getString('token');
+      String apiUrl = '${Url.url}api/movements/mark-completed/$requestId';
+
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
       Map<String, dynamic> payload = {
         'distance': kilometers,
-        'end_latitude': double.parse(position.latitude.toString()),
-        'end_longitude': double.parse(position.longitude.toString()),
+        'end_latitude': position.latitude,
+        'end_longitude': position.longitude,
         'notes': notes,
         'additional_amount': additional,
         'reason': reason,
@@ -102,27 +101,30 @@ class LocationService {
 
       final response = await http.post(
         Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _buildHeaders(token),
         body: jsonEncode(payload),
       );
 
       if (response.statusCode == 200) {
         log('تم إرسال بيانات الموقع بنجاح.');
         stopSendingLocation();
-        log('تم ايقاف الارسال ');
+        log('تم إيقاف إرسال الموقع.');
         Get.off(() => const MainScreen());
       } else {
-        print(coin);
-        print(additional);
         log('فشل في إرسال بيانات الموقع. الرمز الحالة: ${response.statusCode}');
-        log('فشل في إرسال بيانات الموقع. الرمز الحالة: ${response.body}');
+        log('تفاصيل الخطأ: ${response.body}');
       }
     } catch (e) {
       log('حدث خطأ أثناء إرسال بيانات الموقع: $e');
     }
+  }
+
+  /// إنشاء ترويسات الطلب HTTP
+  static Map<String, String> _buildHeaders(String? token) {
+    return {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
   }
 }
