@@ -73,7 +73,13 @@ class LocationService {
   }
 
   // دالة لإنهاء إرسال الموقع وإرسال البيانات النهائية
-  static Future<void> EndsendLocationToDataBase(double kilometers,String notes,String reason,String additional) async {
+  static Future<void> EndsendLocationToDataBase(
+    double kilometers,
+    double additional,
+    String coin,
+    String notes,
+    String reason,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var request_id = prefs.getString('request_id');
     var token = prefs.getString('token');
@@ -88,9 +94,10 @@ class LocationService {
         'distance': kilometers,
         'end_latitude': double.parse(position.latitude.toString()),
         'end_longitude': double.parse(position.longitude.toString()),
-        'notes':notes,
-        'additional':additional,
-        'reason':reason,
+        'notes': notes,
+        'additional_amount': additional,
+        'reason': reason,
+        'coin': coin,
       };
 
       final response = await http.post(
@@ -109,6 +116,8 @@ class LocationService {
         log('تم ايقاف الارسال ');
         Get.off(() => const MainScreen());
       } else {
+        print(coin);
+        print(additional);
         log('فشل في إرسال بيانات الموقع. الرمز الحالة: ${response.statusCode}');
         log('فشل في إرسال بيانات الموقع. الرمز الحالة: ${response.body}');
       }

@@ -19,6 +19,14 @@ class Order extends StatefulWidget {
 }
 
 class _OrderState extends State<Order> {
+  final Map<String, String> currencyMap = {
+    'السوري': 'SYP',
+    'التركي': 'TL',
+    'الدولار': 'USD',
+  };
+
+  String? selectedCurrency;
+  String? selectedCurrencyValue;
   bool _isOnDuty = true;
   double _price = 0.0;
   final TextEditingController _kilometersController = TextEditingController();
@@ -173,6 +181,7 @@ class _OrderState extends State<Order> {
             const SizedBox(height: 10),
             // حقل إدخال المعلومات الإضافية
             TextField(
+              keyboardType: TextInputType.number,
               controller: _additionalController,
               decoration: InputDecoration(
                 hintText: 'المبلغ المالي',
@@ -183,6 +192,31 @@ class _OrderState extends State<Order> {
                 filled: true,
                 fillColor: Colors.grey[200],
               ),
+            ),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                hintText: 'نوع العملة',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
+              value: selectedCurrency,
+              items: currencyMap.keys.map((String currency) {
+                return DropdownMenuItem<String>(
+                  value: currency,
+                  child: Text(currency),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedCurrency = newValue;
+                  selectedCurrencyValue = currencyMap[newValue];
+                });
+              },
             ),
             const SizedBox(height: 20),
             // حقل إدخال السبب
@@ -219,12 +253,18 @@ class _OrderState extends State<Order> {
               onPressed: () {
                 double kilometers =
                     double.tryParse(_kilometersController.text) ?? 1.0;
+                double additional = double.tryParse(_additionalController.text.trim()) ?? 0.0;
+                String coin = selectedCurrencyValue ?? 'SYP';
                 String reason = _reasonController.text.trim();
-                String additional = _additionalController.text.trim();
                 String notes = _notesController.text.trim();
 
                 LocationService.EndsendLocationToDataBase(
-                    kilometers, reason, additional, notes);
+                  kilometers,
+                  additional,
+                  coin,
+                  reason,
+                  notes,
+                );
 
                 _kilometersController.clear();
                 _reasonController.clear();

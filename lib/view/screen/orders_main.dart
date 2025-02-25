@@ -665,7 +665,7 @@ class _NotificationsState extends State<Notifications> {
                                 title: Text(
                                   "اسم الزبون: ${data['name'].toString()}",
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    // color: Colors.black,
                                     fontSize: 16.0,
                                   ),
                                   // textDirection: TextDirection.rtl,
@@ -677,28 +677,28 @@ class _NotificationsState extends State<Notifications> {
                                       text:
                                           "رقم الزبون: ${data['phone_number'].toString()}",
                                       alignment: Alignment.centerRight,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 16.0,
                                     ),
                                     CustomText(
                                       text:
                                           "موقع الزبون: ${data['customer_address'].toString()}",
                                       alignment: Alignment.centerRight,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 16.0,
                                     ),
                                     CustomText(
                                       text:
                                           "الوجهة المراد الذهاب إليها : ${data['destination_address'].toString()}",
                                       alignment: Alignment.centerRight,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 16.0,
                                     ),
                                     CustomText(
                                       text:
                                           "نوع الرحلة: ${data['type'].toString()}",
                                       alignment: Alignment.centerRight,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 16.0,
                                     ),
                                   ],
