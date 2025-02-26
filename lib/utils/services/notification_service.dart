@@ -91,8 +91,8 @@ class NotificationService {
   Future<void> _showNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'channel_id2',
-      'channel_name2',
+      'channel_id',
+      'channel_name',
       importance: Importance.max,
       priority: Priority.max,
       visibility: NotificationVisibility.public,
