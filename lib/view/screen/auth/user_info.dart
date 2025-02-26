@@ -1,18 +1,13 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:driver_taxi/components/custom_text.dart';
 import 'package:driver_taxi/utils/app_colors.dart';
 import 'package:driver_taxi/utils/url.dart';
 import 'package:driver_taxi/view/screen/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 class UserInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -21,12 +16,7 @@ class UserInfoPage extends StatelessWidget {
           'ملفي الشخصي',
           style: TextStyle(color: Colors.black),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(Icons.arrow_back, color: AppColors.blue1),
-        ),
+        leading: BackButton(),
       ),
       body: Center(
         child: FutureBuilder<Map<String, dynamic>>(
@@ -41,9 +31,6 @@ class UserInfoPage extends StatelessWidget {
               if (userData == null || userData is! Map<String, dynamic>) {
                 return const Text('Unexpected response format');
               }
-
-              log(jsonEncode(userData)); // تصحيح تسجيل البيانات
-
               return Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Column(
@@ -54,10 +41,7 @@ class UserInfoPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(1.0),
                           child: SizedBox(
-                            width: size.width / 1.8,
-                            height: size.height / 4,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
+                            child: ClipOval(
                               child: Image.network(
                                 userData['avatar'] != null &&
                                         userData['avatar'].isNotEmpty
@@ -69,6 +53,7 @@ class UserInfoPage extends StatelessWidget {
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset(
                                     'assets/images/car1.png',
+                                    fit: BoxFit.cover,
                                   );
                                 },
                               ),
@@ -78,6 +63,7 @@ class UserInfoPage extends StatelessWidget {
                         const CustomText(
                           text: 'الاسم الكامل',
                           alignment: Alignment.centerRight,
+                          color: AppColors.textColor,
                         ),
                         SizedBox(height: 3.h),
                         TextFormField(
@@ -99,6 +85,7 @@ class UserInfoPage extends StatelessWidget {
                         const CustomText(
                           text: 'رقم الجوال',
                           alignment: Alignment.centerRight,
+                          color: AppColors.textColor,
                         ),
                         SizedBox(height: 3.h),
                         TextFormField(
@@ -120,6 +107,7 @@ class UserInfoPage extends StatelessWidget {
                         const CustomText(
                           text: 'البريد الإلكتروني',
                           alignment: Alignment.centerRight,
+                          color: AppColors.textColor,
                         ),
                         SizedBox(height: 3.h),
                         TextFormField(
