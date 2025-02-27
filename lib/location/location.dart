@@ -106,7 +106,8 @@ class LocationService {
       );
 
       if (response.statusCode == 200) {
-        log('تم إرسال بيانات الموقع بنجاح.');
+        log('تم انهاء الرحلة ');
+        print(response.body);
         stopSendingLocation();
         log('تم إيقاف إرسال الموقع.');
         Get.off(() => const MainScreen());
