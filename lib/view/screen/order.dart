@@ -118,198 +118,196 @@ class _OrderState extends State<Order> {
           icon: const Icon(Icons.arrow_back, color: AppColors.blue1),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey, // ربط الفورم بالمفتاح
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // أزرار حالة الطلب
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildStatusButton(
-                    text: 'تم العثور على الزبون',
-                    isSelected: _isOnDuty,
-                    onPressed: () {
-                      setState(() => _isOnDuty = true);
-                      sendStatusToDataBase(_isOnDuty);
-                    },
-                  ),
-                  _buildStatusButton(
-                    text: 'لم يتم العثور على الزبون',
-                    isSelected: !_isOnDuty,
-                    onPressed: () {
-                      setState(() => _isOnDuty = false);
-                      sendStatusToDataBase(_isOnDuty);
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              // حقل إدخال الكيلومترات
-              TextFormField(
-                controller: _kilometersController,
-                decoration: InputDecoration(
-                  hintText: '  كيلومترات',
-                  suffixIcon: const Icon(
-                    Icons.directions_car,
-                    color: ui.Color.fromARGB(95, 0, 0, 0),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.black12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildStatusButton(
+                      text: 'تم العثور على الزبون',
+                      isSelected: _isOnDuty,
+                      onPressed: () {
+                        setState(() => _isOnDuty = true);
+                        sendStatusToDataBase(_isOnDuty);
+                      },
+                    ),
+                    _buildStatusButton(
+                      text: 'لم يتم العثور على الزبون',
+                      isSelected: !_isOnDuty,
+                      onPressed: () {
+                        setState(() => _isOnDuty = false);
+                        sendStatusToDataBase(_isOnDuty);
+                      },
+                    ),
+                  ],
                 ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                onChanged: _updatePrice,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال الكيلومترات';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'يرجى إدخال رقم صحيح';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              // حقل إدخال المعلومات الإضافية
-              TextFormField(
-                controller: _additionalController,
-                decoration: InputDecoration(
-                  hintText: 'المبلغ المالي',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.black12),
+                SizedBox(height: 8.h),
+                TextFormField(
+                  controller: _kilometersController,
+                  decoration: InputDecoration(
+                    hintText: '  كيلومترات',
+                    suffixIcon: const Icon(
+                      Icons.directions_car,
+                      color: ui.Color.fromARGB(95, 0, 0, 0),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.black12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  onChanged: _updatePrice,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'يرجى إدخال الكيلومترات';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'يرجى إدخال رقم صحيح';
+                    }
+                    return null;
+                  },
                 ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال المبلغ المالي';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'يرجى إدخال رقم صحيح';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              // حقل اختيار العملة
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  hintText: 'نوع العملة',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.black12),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _additionalController,
+                  decoration: InputDecoration(
+                    hintText: 'المبلغ المالي',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.black12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'يرجى إدخال المبلغ المالي';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'يرجى إدخال رقم صحيح';
+                    }
+                    return null;
+                  },
                 ),
-                value: selectedCurrency,
-                items: currencyMap.keys.map((String currency) {
-                  return DropdownMenuItem<String>(
-                    value: currency,
-                    child: Text(currency),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedCurrency = newValue;
-                    selectedCurrencyValue = currencyMap[newValue];
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى اختيار العملة';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              // حقل إدخال السبب
-              TextFormField(
-                controller: _reasonController,
-                decoration: InputDecoration(
-                  hintText: 'السبب',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.black12),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    hintText: 'نوع العملة',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.black12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال السبب';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              // حقل إدخال الملاحظات
-              TextFormField(
-                controller: _notesController,
-                decoration: InputDecoration(
-                  hintText: 'ملاحظات',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.black12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال الملاحظات';
-                  }
-                  return null;
-                },
-              ),
-              const Spacer(),
-              // زر إنهاء الرحلة
-              LoadingButtonWidget(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    double kilometers =
-                        double.tryParse(_kilometersController.text) ?? 1.0;
-                    double additional =
-                        double.tryParse(_additionalController.text.trim()) ?? 0.0;
-                    String coin = selectedCurrencyValue ?? 'SYP';
-                    String reason = _reasonController.text.trim();
-                    String notes = _notesController.text.trim();
-
-                    LocationService.EndsendLocationToDataBase(
-                      kilometers,
-                      additional,
-                      coin,
-                      reason,
-                      notes,
+                  value: selectedCurrency,
+                  items: currencyMap.keys.map((String currency) {
+                    return DropdownMenuItem<String>(
+                      value: currency,
+                      child: Text(currency),
                     );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCurrency = newValue;
+                      selectedCurrencyValue = currencyMap[newValue];
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'يرجى اختيار العملة';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _reasonController,
+                  decoration: InputDecoration(
+                    hintText: 'السبب',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.black12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'يرجى إدخال السبب';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _notesController,
+                  decoration: InputDecoration(
+                    hintText: 'ملاحظات',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.black12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'يرجى إدخال الملاحظات';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                // const Spacer(),
+                LoadingButtonWidget(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      double kilometers =
+                          double.tryParse(_kilometersController.text) ?? 1.0;
+                      double additional =
+                          double.tryParse(_additionalController.text.trim()) ??
+                              0.0;
+                      String coin = selectedCurrencyValue ?? 'SYP';
+                      String reason = _reasonController.text.trim();
+                      String notes = _notesController.text.trim();
 
-                    _kilometersController.clear();
-                    _reasonController.clear();
-                    _additionalController.clear();
-                    _notesController.clear();
-                  }
-                },
-                text: 'قم بانهاء الرحلة',
-              ),
-            ],
+                      LocationService.EndsendLocationToDataBase(
+                        kilometers,
+                        additional,
+                        coin,
+                        reason,
+                        notes,
+                      );
+
+                      _kilometersController.clear();
+                      _reasonController.clear();
+                      _additionalController.clear();
+                      _notesController.clear();
+                    }
+                  },
+                  text: 'قم بانهاء الرحلة',
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // بناء زر حالة الطلب
   Widget _buildStatusButton({
     required String text,
     required bool isSelected,
